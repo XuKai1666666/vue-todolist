@@ -1,32 +1,30 @@
-<template>
+git <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+<table class="todolist-box">
+  <span>
+    做什么：
+    <input type="text" ref="getTextValue" @keyup.enter="addTodo">
+    <input type="date" ref="getDateValue" @keyup.enter="addTodo">
+    <button @click="addTodo" >添加</button>
+  </span>
+    <tr>
+        <th>序号</th>
+        <th>做什么</th>
+        <th>什么时候做</th>
+        <th>操作</th>
+    </tr>
+    <tr v-for="(todo,index) in todos"
+        :index="index"
+        :key="todo.text"
+        :date="todo.tododate"
+    >
+        <td>{{index}}</td>
+        <td>{{todo.text}}</td>
+        <td>{{todo.tododate}}</td>
+        <td><button @click="deleteTodo(index)">删除</button></td>
+    </tr>
+</table>
   </div>
 </template>
 
@@ -35,24 +33,46 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      todos: [
+        { text: 'Learn JavaScript',tododate:'2020-1-1' },
+        { text: 'Learn Vue',tododate:'2020-1-1'  },
+        { text: 'Build something awesome',tododate:'2020-1-1'  }
+      ],
+    }
+  },
+  methods:{
+    addTodo(){
+
+      console.log( this.$refs.getTextValue.value)
+      console.log( this.$refs.getDateValue.value)
+
+      if(this.$refs.getTextValue.value=='' || this.$refs.getDateValue.value=='' ){
+        alert('请输入有效值')
+      }
+      else{
+      this.todos.push({
+        text: this.$refs.getTextValue.value,
+        tododate: this.$refs.getDateValue.value
+      })
+      }
+      //清空输入区
+      this.$refs.getTextValue.value= this.$refs.getDateValue.value='';
+    },
+    deleteTodo(index){
+      this.todos.splice(index, 1)
+    }
   }
+
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.todolist-box{
+  margin:auto;
 }
 </style>
