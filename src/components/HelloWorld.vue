@@ -84,12 +84,12 @@ export default {
     addbuynum(num,index){//单品增加数量 --不得大于库存
     console.log(num,index)
       console.log(this.cargo)
-      this.cargo[index].num2++
+      this.cargoes[index].num2++
     },
-    asubbuynum(num,index){//单品减少数量--不得小于0
+    subbuynum(num,index){//单品减少数量--不得小于0
      console.log(num,index)
      console.log(this.cargo)
-       this.cargo[index].num2--
+       this.cargoes[index].num2--
     }
   }
 
