@@ -1,30 +1,40 @@
 git <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-<table class="todolist-box">
-  <span>
-    做什么：
-    <input type="text" ref="getTextValue" @keyup.enter="addTodo">
-    <input type="date" ref="getDateValue" @keyup.enter="addTodo">
-    <button @click="addTodo" >添加</button>
-  </span>
-    <tr>
-        <th>序号</th>
-        <th>做什么</th>
-        <th>什么时候做</th>
-        <th>操作</th>
-    </tr>
-    <tr v-for="(todo,index) in todos"
-        :index="index"
-        :key="todo.text"
-        :date="todo.tododate"
-    >
-        <td>{{index}}</td>
-        <td>{{todo.text}}</td>
-        <td>{{todo.tododate}}</td>
-        <td><button @click="deleteTodo(index)">删除</button></td>
-    </tr>
-</table>
+    <div id="shop-box" v-for="(cargo, index) in cargoes" :index="index" :key="cargo.name" :price="cargo.price">
+    
+      <label for={{index}}>
+        货物{{ index+1 }}:{{cargo.name}}￥{{cargo.price}}元
+        
+      </label>
+      <input type="checkbox" 
+      :id="cargo.index"  :value="cargo" v-model="shopcart"  />
+    </div>
+    <br>
+    <hr>
+
+    <div id="shopcart-box">
+      <table >
+        <tr>
+          <th>序号</th>
+          <th>物品</th>
+          <th>价格</th>
+          <th>操作</th>
+        </tr>
+        <tr v-for="(cargo, index) in shopcart" :index="index" :key="cargo.name" :price="cargo.price">
+          <td>{{ index+1 }}</td>
+          <td>{{ cargo.name }}</td>
+          <td>{{ cargo.price }}元</td>
+          <td><button @click="deleteTodo(index)">删除</button></td>
+        </tr>
+        <br>
+        <tr >总价为{{totalPrice}}</tr>
+      </table>
+      get:value:{{shopcart}}
+    </div>
+
+
+
   </div>
 </template>
 
@@ -36,33 +46,30 @@ export default {
   },
   data() {
     return {
-      todos: [
-        { text: 'Learn JavaScript',tododate:'2020-1-1' },
-        { text: 'Learn Vue',tododate:'2020-1-1'  },
-        { text: 'Build something awesome',tododate:'2020-1-1'  }
+      cargoes: [
+        { name: '啤酒', price: 3 },
+        { name: '花生', price: 6 },
+        { name: '瓜子', price: 5 },
+        { name: '矿泉水', price: 2 }
+      ],
+      shopcart:[
+        {name: '啤酒', price: 3 }
       ],
     }
   },
-  methods:{
-    addTodo(){
-
-      console.log( this.$refs.getTextValue.value)
-      console.log( this.$refs.getDateValue.value)
-
-      if(this.$refs.getTextValue.value=='' || this.$refs.getDateValue.value=='' ){
-        alert('请输入有效值')
-      }
-      else{
-      this.todos.push({
-        text: this.$refs.getTextValue.value,
-        tododate: this.$refs.getDateValue.value
-      })
-      }
-      //清空输入区
-      this.$refs.getTextValue.value= this.$refs.getDateValue.value='';
+  computed: {
+        totalPrice(){
+            var total = 0;
+            for(var i=0;i<this.shopcart.length;i++){
+                var item = this.shopcart[i];
+                total += item.price;
+            }
+            return total;
+        },
     },
-    deleteTodo(index){
-      this.todos.splice(index, 1)
+  methods: {
+    deleteTodo(index) {
+      this.shopcart.splice(index, 1)
     }
   }
 
@@ -72,7 +79,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.todolist-box{
-  margin:auto;
+.todolist-box {
+  margin: auto;
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="todolist"/>
+  <HelloWorld msg="Xukai的小超市"/>
 </template>
 
 <script>
