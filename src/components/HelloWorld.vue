@@ -1,20 +1,28 @@
-git <template>
+<template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <div id="shop-box" v-for="(cargo, index) in cargoes" :index="index" :key="cargo.name" :price="cargo.price">
-    
-      <label for={{index}}>
-        货物{{ index+1 }}:{{cargo.name}}￥{{cargo.price}}元
-        
+    <div id="shop-stocks">
+      <ol>库存清单：
+        <ul v-for="cargo in cargoes" :key="cargo.name" :num="cargo.num">
+          {{ cargo.name }}*******{{ cargo.num }}
+        </ul>
+      </ol>
+    </div>
+    <hr>
+    <p>shop</p>
+    <div id="shop-box" v-for="(cargo, index) in cargoes" :index="index" :key="cargo.name" :price="cargo.price" :num2="cargo.num2">
+      <label :for=index>
+        货物{{ index + 1 }}:{{ cargo.name }}￥{{ cargo.price }}元
       </label>
-      <input type="checkbox" 
-      :id="cargo.index"  :value="cargo" v-model="shopcart"  />
+      <!-- <input type="checkbox" :id="cargo.index" :value="cargo" v-model="shopcart" /> -->
+      <button @click="addbuynum(cargo.num2,index)" >+</button> 
+      数量：{{cargo.num2}}
+      <button @click="subbuynum(cargo.num2,index)" >-</button> 
     </div>
     <br>
     <hr>
-
     <div id="shopcart-box">
-      <table >
+      <table>
         <tr>
           <th>序号</th>
           <th>物品</th>
@@ -22,19 +30,17 @@ git <template>
           <th>操作</th>
         </tr>
         <tr v-for="(cargo, index) in shopcart" :index="index" :key="cargo.name" :price="cargo.price">
-          <td>{{ index+1 }}</td>
+          <td>{{ index + 1 }}</td>
           <td>{{ cargo.name }}</td>
           <td>{{ cargo.price }}元</td>
           <td><button @click="deleteTodo(index)">删除</button></td>
         </tr>
         <br>
-        <tr >总价为{{totalPrice}}</tr>
+        <tr>结算：￥{{ totalPrice }}元</tr>
+        <button @click="settlement">结算</button>
       </table>
-      get:value:{{shopcart}}
+      get:value:{{ shopcart }}
     </div>
-
-
-
   </div>
 </template>
 
@@ -47,29 +53,43 @@ export default {
   data() {
     return {
       cargoes: [
-        { name: '啤酒', price: 3 },
-        { name: '花生', price: 6 },
-        { name: '瓜子', price: 5 },
-        { name: '矿泉水', price: 2 }
+        { name: '啤酒', price: 3,num:10,num2:1 },
+        { name: '花生', price: 6,num:10,num2:0 },
+        { name: '瓜子', price: 5,num:10,num2:0 },
+        { name: '香烟', price: 9,num:10,num2:0 }
       ],
-      shopcart:[
-        {name: '啤酒', price: 3 }
+      shopcart: [
+        { name: '啤酒', price: 3,buynum:1 }
       ],
+      //  counter:0,
     }
   },
   computed: {
-        totalPrice(){
-            var total = 0;
-            for(var i=0;i<this.shopcart.length;i++){
-                var item = this.shopcart[i];
-                total += item.price;
-            }
-            return total;
-        },
+    totalPrice() {
+      var total = 0;
+      for (var i = 0; i < this.shopcart.length; i++) {
+        var item = this.shopcart[i];
+        total += item.price;
+      }
+      return total;
     },
+  },
   methods: {
-    deleteTodo(index) {
+    deleteTodo(index) {//
       this.shopcart.splice(index, 1)
+    },
+    settlement() {
+      //选择数量，确认后点击结算，计算总金额
+    },
+    addbuynum(num,index){//单品增加数量 --不得大于库存
+    console.log(num,index)
+      console.log(this.cargo)
+      this.cargo[index].num2++
+    },
+    asubbuynum(num,index){//单品减少数量--不得小于0
+     console.log(num,index)
+     console.log(this.cargo)
+       this.cargo[index].num2--
     }
   }
 
@@ -77,7 +97,6 @@ export default {
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .todolist-box {
   margin: auto;
