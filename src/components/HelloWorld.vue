@@ -4,7 +4,7 @@
     <div id="shop-stocks">
       <ol>库存清单：
         <ul v-for="cargo in cargoes" :key="cargo.name" :num="cargo.num">
-          {{ cargo.name }}*******{{ cargo.num }}
+          {{ cargo.name }}*******{{ cargo.num-cargo.num2 }}
         </ul>
       </ol>
     </div>
@@ -15,9 +15,10 @@
         货物{{ index + 1 }}:{{ cargo.name }}￥{{ cargo.price }}元
       </label>
       <!-- <input type="checkbox" :id="cargo.index" :value="cargo" v-model="shopcart" /> -->
-      <button @click="addbuynum(cargo.num2,index)" >+</button> 
+      <button @click="addToShopCart(cargo.num2,index)" >+</button> 
       数量：{{cargo.num2}}
-      <button @click="subbuynum(cargo.num2,index)" >-</button> 
+      <button @click="subToShopCart(cargo.num2,index)" >-</button> 
+      <br>
     </div>
     <br>
     <hr>
@@ -33,11 +34,11 @@
           <td>{{ index + 1 }}</td>
           <td>{{ cargo.name }}</td>
           <td>{{ cargo.price }}元</td>
+
           <td><button @click="deleteTodo(index)">删除</button></td>
         </tr>
         <br>
         <tr>结算：￥{{ totalPrice }}元</tr>
-        <button @click="settlement">结算</button>
       </table>
       get:value:{{ shopcart }}
     </div>
@@ -78,18 +79,45 @@ export default {
     deleteTodo(index) {//
       this.shopcart.splice(index, 1)
     },
-    settlement() {
-      //选择数量，确认后点击结算，计算总金额
-    },
-    addbuynum(num,index){//单品增加数量 --不得大于库存
+    // settlement() {
+    //   //选择数量，确认后点击结算，计算总金额
+    // },
+    addToShopCart(num,index){//单品增加数量 --不得大于库存
     console.log(num,index)
       console.log(this.cargo)
       this.cargoes[index].num2++
+      //添加到shopcart
+      console.log(this.addToShopCart)
+      console.log(this.shopcart)
+      if(this.cargoes[index].num2<=this.cargoes[index].num){//如果购买的小于库存
+
+      //将+选择的商品加入购物车中
+      this.shopcart.push({
+        name:this.cargoes[index].name,
+        price:this.cargoes[index].price,
+        buynum:this.cargoes[index].num2}
+      
+      )
+      }else{
+        alert('没有库存了')
+        this.cargoes[index].num2--//超出库存时扳回库存值
+      }
     },
-    subbuynum(num,index){//单品减少数量--不得小于0
+    subToShopCart(num,index){//单品减少数量--不得小于0
      console.log(num,index)
      console.log(this.cargo)
        this.cargoes[index].num2--
+
+       if(this.cargoes[index].num2>=0){//如果购买的小于库存
+       //将-选择的商品在购物车中去除
+       this.shopcart.shift({
+        name:this.cargoes[index].name,
+        price:this.cargoes[index].price,
+        buynum:this.cargoes[index].num2
+      })
+      }else{
+        this.cargoes[index].num2++//小于0时扳回0
+      }
     }
   }
 
